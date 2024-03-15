@@ -19,12 +19,26 @@ main {
   flex-direction: column;
   margin: auto;
   height: 100vh;
+  background-color: #ff0000;
+}
+#search-input {
+  background-color: gray;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 5%;
+}
+.info-table {
+  background-color: gray;
+  border-radius: 5%;
 }
 #image-container {
   border: 2px solid black;
   border-radius: 5%;
   width: 20vw;
   height: 20vh;
+  background-color: gray;
+  border: none;
 }
 #image-container img {
   width: 100%;
