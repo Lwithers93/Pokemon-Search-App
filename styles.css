@@ -4,6 +4,9 @@
   margin: 0;
   font-family: JetBrains Mono, monospace;
 }
+.hidden {
+  display: none;
+}
 
 main,
 .search-box,
@@ -27,6 +30,32 @@ main {
   padding: 6px;
   cursor: pointer;
   border-radius: 5%;
+}
+.search-box-outer,
+.search-box-inner {
+  display: flex;
+  padding: 6px;
+  gap: 4px;
+}
+.search-box-inner {
+  flex-direction: column;
+  position: relative;
+}
+.autofill {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  color: #000;
+  z-index: 1;
+  position: absolute;
+  margin-top: 30px;
+}
+.autofill p {
+  padding: 2px;
+}
+.autofill p:hover {
+  background-color: aquamarine;
+  cursor: pointer;
 }
 .info-table {
   background-color: gray;

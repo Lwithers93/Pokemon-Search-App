@@ -14,8 +14,11 @@
   <body>
     <main>
       <h1>Pokemon Search</h1>
-      <div class="search-box">
-        <input type="text" id="search-input" required />
+      <div class="search-box-outer">
+        <div class="search-box-inner">
+          <input type="text" id="search-input" required oninput="autofill()" />
+          <div id="autofill-list" class="autofill hidden"></div>
+        </div>
         <button id="search-button">Search</button>
       </div>
       <div id="info-container">
