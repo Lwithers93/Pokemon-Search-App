@@ -2,6 +2,7 @@ const infoContainer = document.getElementById("info-container");
 const imageContainer = document.getElementById("image-container");
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-button");
+const autofillList = document.querySelector("#autofill-list");
 const url = "https://pokeapi-proxy.freecodecamp.rocks/api/pokemon";
 let pokemonData = {};
 let pokemonNames = [];
@@ -73,6 +74,7 @@ const fetchData = (url) => {
 };
 
 const search = () => {
+  autofillList.innerHTML = "";
   // get the table data elements in an array
   const tableItems = Array.from(document.querySelectorAll(".table-data"));
   // loop through elements and clear their innerHTML
@@ -90,23 +92,24 @@ const autofill = () => {
   console.log("onchange triggered");
   // get the names that match the characters so far
   let chars = document.getElementById("search-input").value;
-  let autofill = document.querySelector("#autofill-list");
-  autofill.classList.remove("hidden");
-  autofill.classList.add("autofill");
-  autofill.innerHTML = "";
+  autofillList.classList.remove("hidden");
+  autofillList.classList.add("autofill");
+  autofillList.innerHTML = "";
   if (chars.length <= 2) {
-    autofill.innerHTML = `<p>...</p>`;
+    autofillList.innerHTML = `<p>...</p>`;
+  } else if (chars.length === 0) {
+    autofillList.innerHTML = "";
   } else {
     let matchesDisplay = getMatches(chars);
     matchesDisplay.forEach((item) => {
-      autofill.innerHTML += `<p onclick="selectPokemon('${item}')">${item}</p>`;
+      autofillList.innerHTML += `<p onclick="selectPokemon('${item}')">${item}</p>`;
     });
   }
 };
 
 const selectPokemon = (poke) => {
   document.querySelector("#search-input").value = poke;
-  autofill();
+  autofillList.innerHTML = "";
 };
 
 const getMatches = (input) => {
@@ -126,7 +129,7 @@ searchBtn.addEventListener("click", search);
 // Add event listener to input element
 searchInput.addEventListener("keydown", (e) => {
   // Check if the key pressed is Enter (keyCode 13)
-  if (e.key === 13) {
+  if (e.key === "Enter") {
     // Prevent the default behavior of the Enter key (form submission)
     e.preventDefault();
     // Call your search function  here
