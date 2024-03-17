@@ -215,6 +215,20 @@ document.addEventListener("keydown", (e) => {
         // if no element already highlighted, start at top of list
         document.getElementById(currentOptions[0]).classList.add("highlighted");
       }
+
+      // ensure the current highlighted item is scrolled into view
+      const itemOffset = next.offsetTop;
+      const itemHeight = next.offsetHeight; // Height of the highlighted item
+      // Calculate the bottom position of the highlighted item
+      const itemBottom = itemOffset + itemHeight;
+      // Scroll the container only if the highlighted item is not fully visible
+      if (itemBottom > autofillList.scrollTop + autofillList.offsetHeight) {
+        // Scroll to make the bottom of the highlighted item visible
+        autofillList.scrollTop = itemBottom - autofillList.offsetHeight;
+      } else if (itemOffset < autofillList.scrollTop) {
+        // Scroll up if the highlighted item is above the current view
+        autofillList.scrollTop = itemOffset;
+      }
     }
   }
 });
