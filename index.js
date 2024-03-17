@@ -26,7 +26,7 @@ const consolidateData = (data) => {
   attributes.forEach((attr) => {
     // assign pokemon name
     if (attr === "pokemon-name") {
-      document.getElementById(attr).innerText = data.name;
+      document.getElementById(attr).innerText = capitalize(data.name);
     } else if (attr === "pokemon-id") {
       // assign pokemon id
       document.getElementById(attr).innerText = data.id;
@@ -232,6 +232,17 @@ document.addEventListener("keydown", (e) => {
     }
   }
 });
+
+// capitalize function
+const capitalize = (word) => {
+  let wordLength = word.length;
+  let firstChar = word[0];
+  let restOfWord = word.slice(1, wordLength);
+  firstChar = firstChar.toUpperCase();
+  restOfWord = restOfWord.toLowerCase();
+  let capitalizedWord = firstChar + restOfWord;
+  return capitalizedWord;
+};
 
 // fetch data on load
 window.onload = () => {
