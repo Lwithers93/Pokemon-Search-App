@@ -24,6 +24,9 @@ main {
   height: 100vh;
   background-color: #ff0000;
 }
+h2 {
+  font-size: 1rem;
+}
 #search-input {
   background-color: gray;
   border: none;
@@ -49,9 +52,13 @@ main {
   z-index: 1;
   position: absolute;
   margin-top: 30px;
+  max-height: 50vh;
 }
 .autofill p {
   padding: 2px;
+}
+.highlighted {
+  background-color: aquamarine;
 }
 .autofill p:hover {
   background-color: aquamarine;

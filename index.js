@@ -89,54 +89,137 @@ const search = () => {
 };
 
 const autofill = () => {
-  console.log("onchange triggered");
   // get the names that match the characters so far
   let chars = document.getElementById("search-input").value;
-  autofillList.classList.remove("hidden");
-  autofillList.classList.add("autofill");
+  // clear autofill list
   autofillList.innerHTML = "";
-  if (chars.length <= 2) {
-    autofillList.innerHTML = `<p>...</p>`;
-  } else if (chars.length === 0) {
+  // clear the vertical scroll to hide element
+  autofillList.style.overflowY = "unset";
+  if (chars.length === 0) {
+    // clear autofill list
     autofillList.innerHTML = "";
+  } else if (chars.length === 1) {
+    // set placeholder to autofill list
+    autofillList.innerHTML = `<p>...</p>`;
   } else {
+    // if 2 or more chars entered
+    // get the mathes to display in the dropdown
     let matchesDisplay = getMatches(chars);
     matchesDisplay.forEach((item) => {
-      autofillList.innerHTML += `<p onclick="selectPokemon('${item}')">${item}</p>`;
+      // loop through matches and add name to list
+      autofillList.innerHTML += `<p id="${item}" class="autofill-item" onclick="selectPokemon('${item}')">${item}</p>`;
     });
+    // add vertical scroll to autofill list
+    autofillList.style.overflowY = "scroll";
+    // highlight first in list
+    if (autofillList.firstElementChild) {
+      autofillList.firstElementChild.classList.add("highlighted");
+    }
   }
 };
 
 const selectPokemon = (poke) => {
+  // populate input list with name of selected pokemon from dropdown
   document.querySelector("#search-input").value = poke;
+  // clear dropdown
   autofillList.innerHTML = "";
+  // search for selected pokemon
+  search();
 };
 
 const getMatches = (input) => {
+  // declare variables
   let currentMatches = [];
   let inputLength = input.length;
+  // loop through all pokemon names data
   for (let i = 0; i < pokemonNames.length; i++) {
+    // slice the name to check against the chars entered to input
     let stringToMatch = pokemonNames[i].slice(0, inputLength);
+    // if the input matches the string
     if (stringToMatch.toLowerCase() === input.toLowerCase()) {
+      // push current pokemon name to matches list
       currentMatches.push(pokemonNames[i]);
     }
   }
+  // return the current matches
   return currentMatches;
 };
 
+// setting event listeners //
+
 // search event listener
 searchBtn.addEventListener("click", search);
-// Add event listener to input element
-searchInput.addEventListener("keydown", (e) => {
+
+// Add event listener to document for search with enter key
+document.addEventListener("keydown", (e) => {
   // Check if the key pressed is Enter (keyCode 13)
   if (e.key === "Enter") {
     // Prevent the default behavior of the Enter key (form submission)
     e.preventDefault();
+    let currentChoice = document.querySelector(".highlighted").id;
+    selectPokemon(currentChoice);
     // Call your search function  here
     search();
   }
 });
 
+// event listener to scroll dropdown
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    if (
+      autofillList.innerHTML === "" ||
+      autofillList.innerHTML === "<p>...</p>"
+    ) {
+      return;
+    } else {
+      // declare local variables
+      let currentSelection;
+      let next;
+      // get array of element IDs
+      let currentOptions = Array.from(
+        document.querySelectorAll(".autofill-item")
+      ).map((item) => item.id);
+      // check for highlighted element
+      if (document.querySelector(".highlighted")) {
+        // get ID of highlighted
+        currentSelection = document.querySelector(".highlighted").id;
+        // get index of highlighted
+        let currentIndex = currentOptions.indexOf(currentSelection);
+        // condition for moving down the list
+        if (e.key === "ArrowDown") {
+          // don't go below the bottom of the list
+          if (currentIndex + 1 >= currentOptions.length) {
+            next = document.getElementById(
+              currentOptions[currentOptions.length - 1]
+            );
+          } else {
+            // move down 1 item
+            next = document.getElementById(currentOptions[currentIndex + 1]);
+          }
+          // condition for moving up the list
+        } else if (e.key === "ArrowUp") {
+          if (currentIndex - 1 < 0) {
+            // don't go above the top of the list
+            next = document.getElementById(currentOptions[0]);
+          } else {
+            // move up one item
+            next = document.getElementById(currentOptions[currentIndex - 1]);
+          }
+        }
+        // highlight the next element and remove from the previous
+        document
+          .getElementById(currentSelection)
+          .classList.remove("highlighted");
+        next.classList.add("highlighted");
+      } else {
+        // if no element already highlighted, start at top of list
+        document.getElementById(currentOptions[0]).classList.add("highlighted");
+      }
+    }
+  }
+});
+
+// fetch data on load
 window.onload = () => {
   // fetch pokemon data from API using generic url
   fetch(url)
